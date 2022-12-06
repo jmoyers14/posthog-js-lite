@@ -173,10 +173,17 @@ export abstract class PostHogCore {
     }
   }
 
-  private buildPayload(payload: { event: string; properties?: PostHogEventProperties; distinct_id?: string }): any {
+  private buildPayload(payload: {
+    event: string
+    distinctId?: string
+    timestamp?: string
+    properties?: PostHogEventProperties
+    distinct_id?: string
+  }): any {
     return {
       distinct_id: payload.distinct_id || this.getDistinctId(),
       event: payload.event,
+      timestamp: payload.timestamp,
       properties: {
         ...this.props, // Persisted properties first
         ...(payload.properties || {}), // Followed by user specified properties
@@ -265,7 +272,13 @@ export abstract class PostHogCore {
     return this
   }
 
-  capture(event: string, properties?: { [key: string]: any }, forceSendFeatureFlags: boolean = false): this {
+  capture(
+    event: string,
+    distinctId?: string,
+    timestamp?: string,
+    properties?: { [key: string]: any },
+    forceSendFeatureFlags: boolean = false
+  ): this {
     if (properties?.$groups) {
       this.groups(properties.$groups)
     }
@@ -273,7 +286,7 @@ export abstract class PostHogCore {
     if (forceSendFeatureFlags) {
       this._sendFeatureFlags(event, properties)
     } else {
-      const payload = this.buildPayload({ event, properties })
+      const payload = this.buildPayload({ event, distinctId, timestamp, properties })
       this.enqueue('capture', payload)
     }
     return this
@@ -468,7 +481,7 @@ export abstract class PostHogCore {
 
     if (this.sendFeatureFlagEvent && !this.flagCallReported[key]) {
       this.flagCallReported[key] = true
-      this.capture('$feature_flag_called', {
+      this.capture('$feature_flag_called', undefined, undefined, {
         $feature_flag: key,
         $feature_flag_response: response,
       })

@@ -107,12 +107,15 @@ export class PostHog implements PostHogNodeV1 {
     return this._sharedClient.optOut()
   }
 
-  capture({ distinctId, event, properties, groups, sendFeatureFlags }: EventMessageV1): void {
+  capture({ event, distinctId, timestamp, properties, groups, sendFeatureFlags }: EventMessageV1): void {
+    console.log(`${event}, ${distinctId}, ${timestamp}, ${properties}, ${groups}, ${sendFeatureFlags}`)
+    /*
     this.reInit(distinctId)
     if (groups) {
       this._sharedClient.groups(groups)
     }
-    this._sharedClient.capture(event, properties, sendFeatureFlags || false)
+    this._sharedClient.capture(event, distinctId, timestamp, properties, sendFeatureFlags || false)
+    */
   }
 
   identify({ distinctId, properties }: IdentifyMessageV1): void {
