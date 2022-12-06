@@ -175,7 +175,6 @@ export abstract class PostHogCore {
 
   private buildPayload(payload: {
     event: string
-    distinctId?: string
     timestamp?: string
     properties?: PostHogEventProperties
     distinct_id?: string
@@ -286,7 +285,7 @@ export abstract class PostHogCore {
     if (forceSendFeatureFlags) {
       this._sendFeatureFlags(event, properties)
     } else {
-      const payload = this.buildPayload({ event, distinctId, timestamp, properties })
+      const payload = this.buildPayload({ event, distinct_id: distinctId, timestamp, properties })
       this.enqueue('capture', payload)
     }
     return this

@@ -108,14 +108,12 @@ export class PostHog implements PostHogNodeV1 {
   }
 
   capture({ event, distinctId, timestamp, properties, groups, sendFeatureFlags }: EventMessageV1): void {
-    console.log(`${event}, ${distinctId}, ${timestamp}, ${properties}, ${groups}, ${sendFeatureFlags}`)
-    /*
+    console.log(`${event}, ${distinctId}, ${timestamp}, ${properties}`)
     this.reInit(distinctId)
     if (groups) {
       this._sharedClient.groups(groups)
     }
     this._sharedClient.capture(event, distinctId, timestamp, properties, sendFeatureFlags || false)
-    */
   }
 
   identify({ distinctId, properties }: IdentifyMessageV1): void {
